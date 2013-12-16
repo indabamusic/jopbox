@@ -15,7 +15,7 @@
                        "https://api.dropbox.com/1/oauth/request_token"
                        "https://api.dropbox.com/1/oauth/access_token"
                        "https://www.dropbox.com/1/oauth/authorize"
-                       :hmac-sha1))
+                       :plaintext))
 
 (defn fetch-request-token
   "Takes a consumer and optionally a callback-uri and returns a request
@@ -139,15 +139,14 @@
     (parse-string (:body (http/get request-url
                                    {:query-params credentials})) true)))
 
-(defn create-folder
-  "Creates a folder at `path`. Root can be either :sandbox or :dropbox."
+(defn delete-media
+  "Deletes a file."
   [consumer access-token-response root path]
-  (let [request-url "https://api.dropbox.com/1/fileops/create_folder"
+  (let [request-url "https://api.dropbox.com/1/fileops/delete"
         credentials (make-credentials consumer
                                       access-token-response
                                       :POST
                                       request-url
                                       nil)]
     (http/post request-url
-               {:query-params credentials
-                :body {:root (name root) :path path}})))
+               {:query-params (assoc credentials :root (name root) :path path)})))
