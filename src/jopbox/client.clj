@@ -124,6 +124,14 @@
                                     :body (clojure.java.io/file local-path)}))
                   true)))
 
+(defn delete-media
+  "Deletes a file."
+  [consumer access-token-response root path]
+  (let [request-url "https://api.dropbox.com/1/fileops/delete"
+        credentials (make-credentials consumer access-token-response :POST request-url nil)]
+    (http/post request-url {:query-params (assoc credentials :root (name root) :path path)})))
+
+
 (defn metadata
   "Retrieves file or folder metadata. `root` can be either :dropbox or
   :sandbox. `path` is the path of a folder or file."
@@ -131,22 +139,5 @@
   (let [request-url (format "https://api.dropbox.com/1/metadata/%s/%s"
                             (name root)
                             path)
-        credentials (make-credentials consumer
-                                      access-token-response
-                                      :GET
-                                      request-url
-                                      nil)]
-    (parse-string (:body (http/get request-url
-                                   {:query-params credentials})) true)))
-
-(defn delete-media
-  "Deletes a file."
-  [consumer access-token-response root path]
-  (let [request-url "https://api.dropbox.com/1/fileops/delete"
-        credentials (make-credentials consumer
-                                      access-token-response
-                                      :POST
-                                      request-url
-                                      nil)]
-    (http/post request-url
-               {:query-params (assoc credentials :root (name root) :path path)})))
+        credentials (make-credentials consumer access-token-response :GET request-url nil)]
+    (parse-string (:body (http/get request-url {:query-params credentials})) true)))
