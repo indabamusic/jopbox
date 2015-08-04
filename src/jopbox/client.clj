@@ -141,3 +141,10 @@
                             path)
         credentials (make-credentials consumer access-token-response :GET request-url nil)]
     (parse-string (:body (http/get request-url {:query-params credentials})) true)))
+
+(defn revisions
+  "Obtains metadata for all available revisions of a file, including the current revision."
+  [consumer access-token-response path]
+  (let [request-url (format "https://api.dropbox.com/1/revisions/auto/%s" path)
+        credentials (make-credentials consumer access-token-response :GET request-url nil)]
+    (parse-string (:body (http/get request-url {:query-params credentials})) true)))
