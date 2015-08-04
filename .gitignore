@@ -11,3 +11,7 @@ pom.xml
 /test/jopbox/dropbox_keys.clj
 
 /.lein-repl-history
+jopbox.iml
+.idea
+pom.xml.asc
+.nrepl-port
